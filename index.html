@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101a2b">
+<title>Appointment Booking</title>
+<style>
+:root{--navy:#101a2b;--navy2:#172943;--gold:#d9b66f;--gold2:#f6e3ad;--ink:#172235;--muted:#738096;--line:#e7eaf0;--paper:#fff;--bg:#f3f5f8;--green:#257b62}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 15% 8%,#fff 0,transparent 30%),linear-gradient(135deg,#f4f6f9,#e9edf3);font-family:Inter,"Segoe UI",Arial,sans-serif;color:var(--ink);display:flex;align-items:center;justify-content:center;padding:28px 16px}
+.shell{width:min(100%,980px);min-height:650px;background:var(--paper);border-radius:25px;overflow:hidden;display:grid;grid-template-columns:310px 1fr;box-shadow:0 28px 80px #18253a24,0 4px 15px #18253a12;border:1px solid #ffffff}
+.side{background:radial-gradient(circle at 20% 5%,#314969 0,transparent 35%),linear-gradient(155deg,#1b2d47,#0d1727 76%);color:white;padding:42px 32px;position:relative;overflow:hidden}
+.side:after{content:"";position:absolute;width:290px;height:290px;border:1px solid #d9b66f30;border-radius:50%;right:-170px;bottom:-90px;box-shadow:0 0 0 22px #d9b66f0a,0 0 0 48px #d9b66f08}
+.brandmark{width:48px;height:48px;border-radius:15px;background:linear-gradient(145deg,#f7e6b7,#b68c45);box-shadow:inset 1px 1px 2px #fff9,0 8px 22px #0005;display:grid;place-items:center;color:#263348;font-weight:800;font-size:19px;margin-bottom:44px}
+.eyebrow{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold2);font-weight:700}
+.side h1{font-family:Georgia,serif;font-weight:400;font-size:34px;line-height:1.12;margin:14px 0 16px;letter-spacing:-.5px}
+.side p{color:#c3ccda;font-size:13px;line-height:1.75;max-width:220px}
+.steps{margin-top:52px;display:grid;gap:20px}.step{display:flex;gap:12px;align-items:center;color:#8d9bb0;font-size:12px}.step .num{width:28px;height:28px;border:1px solid #61718a;border-radius:50%;display:grid;place-items:center;font-size:11px}.step.active{color:white}.step.active .num{background:linear-gradient(145deg,#f6e3ad,#c49a51);color:#1a2638;border:0;box-shadow:0 4px 14px #0004}
+.main{padding:46px 54px;display:flex;flex-direction:column;justify-content:center;min-width:0}
+.progress{height:3px;background:#edf0f4;border-radius:5px;margin-bottom:35px;overflow:hidden}.progress span{display:block;height:100%;width:33.33%;background:linear-gradient(90deg,#b98d49,#f3dfa8);transition:width .35s ease}
+.panel{animation:fadeIn .42s ease both}@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}.hidden{display:none!important}
+.kicker{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:#a17b3e;font-weight:800}.heading{font:400 31px Georgia,serif;margin:10px 0 8px;color:#17263b}.sub{font-size:13px;color:var(--muted);line-height:1.6;margin:0 0 28px}
+label{display:block;font-size:11px;font-weight:700;color:#344258;margin:0 0 8px;letter-spacing:.25px}.field{margin-bottom:18px}input,textarea{width:100%;border:1px solid #dfe4eb;border-radius:10px;padding:14px 14px;font:13px inherit;color:#1b2b40;background:#fbfcfd;outline:none;transition:.2s}input:focus,textarea:focus{border-color:#c4a15f;box-shadow:0 0 0 3px #d9b66f20;background:white}input::placeholder,textarea::placeholder{color:#a6afbd}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.btnrow{display:flex;justify-content:space-between;gap:12px;margin-top:24px}.btn{border:0;border-radius:10px;padding:14px 22px;font-size:12px;font-weight:700;letter-spacing:.3px;cursor:pointer;transition:transform .18s,box-shadow .18s}.btn:hover{transform:translateY(-1px)}.primary{color:#1b2739;background:linear-gradient(135deg,#f5e4b7,#c49b55);box-shadow:0 8px 18px #b58a432d,inset 0 1px 1px #fff}.primary:hover{box-shadow:0 11px 24px #b58a4340}.secondary{background:#f0f2f5;color:#536176}.full{width:100%}
+.calendar-wrap{display:grid;grid-template-columns:1fr 1fr;gap:22px}.calendar{border:1px solid var(--line);border-radius:14px;padding:15px}.calhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.calhead strong{font:16px Georgia,serif}.calnav{border:0;background:#f1f3f6;border-radius:7px;width:27px;height:27px;cursor:pointer;color:#45536a}.days{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;text-align:center}.dow{font-size:9px;color:#9aa4b2;padding:5px 0}.day{border:0;background:transparent;border-radius:8px;height:32px;font-size:11px;color:#39475b;cursor:pointer}.day:hover:not(:disabled){background:#f5eddd}.day:disabled{color:#d5dae1;cursor:default}.day.selected{background:linear-gradient(145deg,#f3dfac,#c69d58);color:#1b2739;font-weight:800;box-shadow:0 3px 8px #b58a4330}.day.today{outline:1px solid #c8a15c}
+.time-panel{border:1px solid var(--line);border-radius:14px;padding:15px}.time-panel h3{font-size:12px;margin:2px 0 12px}.time-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-height:260px;overflow:auto}.time{border:1px solid #e1e5eb;background:#fff;padding:10px 6px;border-radius:8px;font-size:11px;cursor:pointer;color:#435168}.time:hover{border-color:#c9a25e}.time.selected{background:#172943;color:#fff;border-color:#172943;box-shadow:0 4px 10px #17294325}.hint{font-size:10px;color:#8994a4;margin-top:12px;line-height:1.5}
+.summary{background:linear-gradient(145deg,#fbfcfd,#f4f6f9);border:1px solid #e8ebf0;border-radius:14px;padding:18px;margin:22px 0}.summaryline{display:flex;justify-content:space-between;gap:15px;padding:8px 0;font-size:12px;border-bottom:1px solid #e9edf2}.summaryline:last-child{border:0}.summaryline span:first-child{color:#8792a2}.summaryline strong{text-align:right;color:#26364c}.successicon{width:58px;height:58px;border-radius:50%;background:linear-gradient(145deg,#d7eee5,#8bc4aa);color:#145b43;display:grid;place-items:center;font-size:27px;box-shadow:0 8px 22px #28785b25;margin-bottom:20px}
+.status{font-size:12px;color:#a33b3b;min-height:17px;margin-top:10px}.fine{font-size:10px;color:#98a2b0;margin-top:20px;line-height:1.6}
+@media(max-width:760px){body{padding:0;background:#f4f6f9}.shell{display:block;border-radius:0;min-height:100vh}.side{padding:25px 25px 22px}.brandmark{margin-bottom:22px;width:40px;height:40px}.side h1{font-size:27px;margin:8px 0}.side p{display:none}.steps{display:flex;gap:15px;margin-top:22px}.step{font-size:0;gap:6px}.step .num{width:25px;height:25px}.main{padding:30px 22px 38px}.progress{margin-bottom:28px}.calendar-wrap{grid-template-columns:1fr}.calendar{padding:12px}.time-list{grid-template-columns:repeat(3,1fr);max-height:180px}.heading{font-size:28px}}
+@media(max-width:380px){.row2{grid-template-columns:1fr}.btn{padding:13px 16px}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <div class="brandmark">A</div>
+    <div class="eyebrow">Appointment portal</div>
+    <h1>Make time<br>for what<br>matters.</h1>
+    <p>A considered, simple way to arrange your appointment. Choose a time that works for you.</p>
+    <div class="steps">
+      <div class="step active" id="side1"><span class="num">01</span> Your details</div>
+      <div class="step" id="side2"><span class="num">02</span> Date & time</div>
+      <div class="step" id="side3"><span class="num">03</span> Confirmation</div>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="progress"><span id="progress"></span></div>
+
+    <section class="panel" id="page1">
+      <div class="kicker">Step 01 / Your details</div>
+      <h2 class="heading">Let’s get acquainted.</h2>
+      <p class="sub">Please share your contact details so we can prepare for your booking.</p>
+      <form id="contactForm">
+        <div class="field"><label for="name">Full name</label><input id="name" name="name" autocomplete="name" placeholder="Your full name" required maxlength="100"></div>
+        <div class="row2">
+          <div class="field"><label for="email">Email address</label><input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required maxlength="150"></div>
+          <div class="field"><label for="phone">Phone number</label><input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="+27 ..." required maxlength="40"></div>
+        </div>
+        <div class="field"><label for="notes">Anything we should know? <span style="font-weight:400;color:#9aa4b2">(Optional)</span></label><textarea id="notes" name="notes" rows="3" placeholder="A short note about your appointment..." maxlength="1000"></textarea></div>
+        <div class="btnrow"><span></span><button class="btn primary" type="submit">Continue <span aria-hidden="true">→</span></button></div>
+        <div class="status" id="contactError" role="alert"></div>
+      </form>
+      <div class="fine">Your details are used only to manage this appointment request.</div>
+    </section>
+
+    <section class="panel hidden" id="page2">
+      <div class="kicker">Step 02 / Date & time</div>
+      <h2 class="heading">Choose your moment.</h2>
+      <p class="sub">Select an available date, then choose a suitable time.</p>
+      <div class="calendar-wrap">
+        <div class="calendar">
+          <div class="calhead"><button class="calnav" id="prevMonth" aria-label="Previous month">‹</button><strong id="monthLabel"></strong><button class="calnav" id="nextMonth" aria-label="Next month">›</button></div>
+          <div class="days" id="calendarDays"></div>
+        </div>
+        <div class="time-panel">
+          <h3 id="timeTitle">Available times</h3>
+          <div class="time-list" id="timeList"><div class="hint">Choose a date to view available times.</div></div>
+          <div class="hint">Times are shown in South African time (SAST).</div>
+        </div>
+      </div>
+      <div class="btnrow"><button class="btn secondary" id="back1" type="button">← Back</button><button class="btn primary" id="toConfirm" type="button">Review booking →</button></div>
+      <div class="status" id="dateError" role="alert"></div>
+    </section>
+
+    <section class="panel hidden" id="page3">
+      <div class="kicker">Step 03 / Review</div>
+      <h2 class="heading">One last look.</h2>
+      <p class="sub">Please confirm that your contact and appointment details are correct.</p>
+      <div class="summary" id="summary"></div>
+      <button class="btn primary full" id="submitBooking" type="button">Submit appointment request</button>
+      <div class="btnrow"><button class="btn secondary" id="back2" type="button">← Back</button><span></span></div>
+      <div class="status" id="submitError" role="alert"></div>
+      <div class="fine">Submitting sends your appointment request by email. Your appointment is not confirmed until you receive confirmation from us.</div>
+    </section>
+
+    <section class="panel hidden" id="page4">
+      <div class="successicon">✓</div>
+      <div class="kicker">Request received</div>
+      <h2 class="heading">Thank you, <span id="thanksName"></span>.</h2>
+      <p class="sub">Your appointment request has been sent successfully. We’ll be in touch using the contact details you provided.</p>
+      <div class="summary" id="finalSummary"></div>
+    </section>
+  </main>
+</div>
+<script>
+/* EDIT THESE SETTINGS TO MATCH YOUR BUSINESS */
+const BOOKING_SETTINGS = {
+  businessName: "Appointment Team",
+  appointmentLabel: "Appointment",
+  // 24-hour times. Change these to your actual appointment slots.
+  times: ["09:00","09:30","10:00","10:30","11:00","11:30","12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00"],
+  // Set to [0,6] to disable Sundays and Saturdays. [] allows every day.
+  disabledWeekdays: [],
+  // Set a number to limit advance bookings, e.g. 60. null means no limit.
+  maxAdvanceDays: 90
+};
+
+const state = {name:"",email:"",phone:"",notes:"",date:null,time:null};
+const $ = id => document.getElementById(id);
+let viewMonth = new Date(); viewMonth.setDate(1);
+const today = new Date(); today.setHours(0,0,0,0);
+const pad = n => String(n).padStart(2,"0");
+const dateKey = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const prettyDate = key => new Date(key+"T12:00:00").toLocaleDateString("en-ZA",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+const prettyTime = t => {let [h,m]=t.split(":").map(Number);let ap=h>=12?"PM":"AM";return `${h%12||12}:${pad(m)} ${ap}`};
+
+function showPage(n){
+  [1,2,3,4].forEach(i=>$("page"+i).classList.toggle("hidden",i!==n));
+  [1,2,3].forEach(i=>$("side"+i).classList.toggle("active",i<=n));
+  $("progress").style.width=({1:"33.33%",2:"66.66%",3:"100%",4:"100%"})[n];
+  const panel=$("page"+n); panel.classList.remove("panel"); void panel.offsetWidth; panel.classList.add("panel");
+}
+$("contactForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  if(!$("contactForm").reportValidity())return;
+  state.name=$("name").value.trim();state.email=$("email").value.trim();state.phone=$("phone").value.trim();state.notes=$("notes").value.trim();
+  showPage(2);renderCalendar();
+});
+$("back1").onclick=()=>showPage(1);
+$("back2").onclick=()=>showPage(2);
+$("prevMonth").onclick=()=>{viewMonth.setMonth(viewMonth.getMonth()-1);renderCalendar()};
+$("nextMonth").onclick=()=>{viewMonth.setMonth(viewMonth.getMonth()+1);renderCalendar()};
+
+function renderCalendar(){
+  $("monthLabel").textContent=viewMonth.toLocaleDateString("en-ZA",{month:"long",year:"numeric"});
+  const holder=$("calendarDays");holder.innerHTML="";
+  ["S","M","T","W","T","F","S"].forEach(x=>{let el=document.createElement("div");el.className="dow";el.textContent=x;holder.append(el)});
+  const first=new Date(viewMonth.getFullYear(),viewMonth.getMonth(),1);
+  const offset=first.getDay();const count=new Date(viewMonth.getFullYear(),viewMonth.getMonth()+1,0).getDate();
+  for(let i=0;i<offset;i++){let blank=document.createElement("div");holder.append(blank)}
+  for(let day=1;day<=count;day++){
+    const d=new Date(viewMonth.getFullYear(),viewMonth.getMonth(),day);const key=dateKey(d);
+    const b=document.createElement("button");b.type="button";b.className="day";b.textContent=day;
+    const tooEarly=d<today;const tooLate=BOOKING_SETTINGS.maxAdvanceDays!==null && d>new Date(today.getTime()+BOOKING_SETTINGS.maxAdvanceDays*86400000);
+    b.disabled=tooEarly||tooLate||BOOKING_SETTINGS.disabledWeekdays.includes(d.getDay());
+    if(key===dateKey(today))b.classList.add("today");if(state.date===key)b.classList.add("selected");
+    b.onclick=()=>{state.date=key;state.time=null;renderCalendar();renderTimes()};
+    holder.append(b);
+  }
+  $("prevMonth").disabled=viewMonth.getFullYear()===today.getFullYear()&&viewMonth.getMonth()===today.getMonth();
+}
+function renderTimes(){
+  const list=$("timeList");list.innerHTML="";
+  $("timeTitle").textContent=state.date?prettyDate(state.date):"Available times";
+  if(!state.date){list.innerHTML='<div class="hint">Choose a date to view available times.</div>';return}
+  BOOKING_SETTINGS.times.forEach(t=>{
+    const b=document.createElement("button");b.type="button";b.className="time"+(state.time===t?" selected":"");b.textContent=prettyTime(t);
+    b.onclick=()=>{state.time=t;renderTimes()};list.append(b);
+  });
+  if(!BOOKING_SETTINGS.times.length)list.innerHTML='<div class="hint">No time slots have been configured yet.</div>';
+}
+$("toConfirm").onclick=()=>{
+  if(!state.date||!state.time){$("dateError").textContent="Please select both a date and a time.";return}
+  $("dateError").textContent="";renderSummary("summary");showPage(3);
+};
+function renderSummary(id){
+  const rows=[["Name",state.name],["Email",state.email],["Phone",state.phone],["Date",prettyDate(state.date)],["Time",prettyTime(state.time)]];
+  if(state.notes)rows.push(["Note",state.notes]);
+  $(id).innerHTML=rows.map(([k,v])=>`<div class="summaryline"><span>${escapeHtml(k)}</span><strong>${escapeHtml(v)}</strong></div>`).join("");
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+$("submitBooking").onclick=async()=>{
+  const btn=$("submitBooking");const err=$("submitError");err.textContent="";btn.disabled=true;btn.textContent="Sending request…";
+  try{
+    const res=await fetch("/api/book",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...state,businessName:BOOKING_SETTINGS.businessName,appointmentLabel:BOOKING_SETTINGS.appointmentLabel})});
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok)throw new Error(data.error||"We couldn't send your request. Please try again.");
+    $("thanksName").textContent=state.name.split(" ")[0];renderSummary("finalSummary");showPage(4);
+  }catch(e){err.textContent=e.message||"Something went wrong. Please try again."}
+  finally{btn.disabled=false;btn.textContent="Submit appointment request"}
+};
+</script>
+</body>
+</html>
